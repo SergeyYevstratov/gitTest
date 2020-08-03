@@ -25,37 +25,31 @@ class ContexMenu {
     showContextMenu(event) {
         event.preventDefault();
         this.target.classList.remove('hidden');
-        var self = this;
-        document.addEventListener('click', function() {
-            self.hideContextMenu();
-        }, { once: true });
+        const self = this;
+        document.addEventListener('click', () => self.hideContextMenu() , { once: true });
     
-        var x = event.clientX;
-        var y = event.clientY;
-        var width = this.target.offsetWidth;
-        var height = this.target.offsetHeight;
-        var windowWidth = window.innerWidth;
-        var windowHeight = window.innerHeight;
+            let {clientX, clientY} = event;
+
+            
+    const   {offsetWidth, offsetHeight} = this.target,
+            {innerWidth, innerHeight} = window;
 
         // position checker 
-        if (x >= windowWidth - width) {
-            x -= width;
+        if (clientX >= innerWidth - offsetWidth) {
+            clientX -= offsetWidth;
         }
-
-        if (y >= windowHeight - height) {
-            y -= height;
+        if (clientY >= innerHeight - offsetHeight) {
+            clientY -= offsetHeight;
         }
-
-        this.target.style.cssText = 'left:' + x + 'px;' + 'top: ' + y + 'px;';
+        this.target.style.cssText = 'left:' + clientX + 'px;' + 'top: ' + clientY + 'px;';
     }
 
     hideContextMenu() {
         this.target.classList.add('hidden');
-        // document.removeEventListener('click', hideContextMenu); 
     }
 }
 
-var contextMenu = new ContexMenu([
+let contextMenu = new ContexMenu([
     {
         title: 'Title 1',
         action: 'a1handler'
@@ -69,14 +63,14 @@ var contextMenu = new ContexMenu([
         action: 'a3handler'
     },
     {
-        title: 'Cut'
+        title: 'Cut'       
     }
 ]);
 
 function init() {
     contextMenu.setTarget(document.querySelector('.context-menu'));
-    var contextMenuActions = ContexMenu.getActions();
-    for(var i = 0, item; i < contextMenu.list.length; i++) {
+    const contextMenuActions = ContexMenu.getActions();
+    for(let i = 0, item; i < contextMenu.list.length; i++) {
         item = document.createElement('div');
         item.classList.add('item');
         item.innerHTML = contextMenu.list[i].title;
@@ -85,18 +79,7 @@ function init() {
         contextMenu.target.appendChild(item);
     }
 
-    window.addEventListener('contextmenu', function(event) {
-        contextMenu.showContextMenu(event);
-    });
+    window.addEventListener('contextmenu', event => contextMenu.showContextMenu(event));
 }
 
 window.addEventListener('load', init);
-
-
-// keyHandler(event) {
-//     if (event.ctrlKey) {
-//         handlerWithCtrl(event);
-//     } else {
-//         handlerWitoutCtrl(event);
-//     }
-// }
